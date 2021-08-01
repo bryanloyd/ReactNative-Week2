@@ -12,3 +12,13 @@ export const comments = (state = { errMess: null, comments: [] }, action) => {
       return state;
   }
 };
+
+export const comment = (state = { comment: [] }, action) => {
+  switch (action.type) {
+    case ActionTypes.ADD_COMMENT:
+      return { ...state, comment: action.payload, id: comments.length };
+
+    default:
+      return state;
+  }
+};
