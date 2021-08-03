@@ -75,9 +75,8 @@ function RenderComments({ comments }) {
           imageSize={10}
           style={{ alignItems: "flex-start", paddingVertical: "5%" }}
           readonly
-        >
-          {item.rating}
-        </Rating>
+        />
+
         <Text
           style={{ fontSize: 12 }}
         >{`-- ${item.author}, ${item.date}`}</Text>
@@ -112,7 +111,12 @@ class CampsiteInfo extends Component {
   }
 
   handleComment(campsiteId) {
-    postComment(campsiteId);
+    this.props.postComment(
+      campsiteId,
+      this.state.rating,
+      this.state.author,
+      this.state.text
+    );
     this.toggleModal();
   }
 
@@ -121,6 +125,7 @@ class CampsiteInfo extends Component {
       rating: 5,
       author: "",
       text: "",
+      showModal: false,
     });
   }
 
@@ -152,40 +157,40 @@ class CampsiteInfo extends Component {
         <RenderComments comments={comments} />
         <Modal
           animationType={"slide"}
+          onRequestClose={() => this.toggleModal()}
           transparent={false}
           visible={this.state.showModal}
-          onRequestClose={() => this.toggleModal()}
         >
           <View style={styles.modal}>
             <Rating
-              showRating
-              startingvalue={this.state.rating}
               imageSize={40}
               onFinishRating={(rating) => this.setState({ rating: rating })}
+              showRating
+              startingValue={this.state.rating}
               style={{ paddingVertical: 10 }}
             />
             <Input
-              placeholder="Author"
               leftIcon={{ type: "font-awesome", name: "user-o" }}
               leftIconContainerStyle={{ paddingRight: 10 }}
               onChangeText={(author) => this.setState({ author: author })}
+              placeholder="Author"
               value={this.state.author}
             />
             <Input
-              placeholder="Comment"
               leftIcon={{ type: "font-awesome", name: "comment-o" }}
               leftIconContainerStyle={{ paddingRight: 10 }}
               onChangeText={(text) => this.setState({ text: text })}
+              placeholder="Comment"
               value={this.state.text}
             />
             <View>
               <Button
-                title="Submit"
-                color="#5637DD"
-                onPress={(campsiteId) => {
-                  this.toggleModal();
+                onPress={() => {
+                  this.handleComment(campsiteId);
                   this.resetForm();
                 }}
+                color="#5637DD"
+                title="Submit"
               />
             </View>
             <View style={{ marginTop: 10 }}>
